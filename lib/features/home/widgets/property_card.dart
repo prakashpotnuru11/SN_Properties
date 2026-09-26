@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/properties/property_details_screen.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class PropertyCard extends StatelessWidget {
@@ -17,9 +18,17 @@ class PropertyCard extends StatelessWidget {
       width: 260,
       child: Card(
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => PropertyDetailsScreen(property: property),
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Stack(
               children: [
                 Container(
@@ -126,7 +135,8 @@ class PropertyCard extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

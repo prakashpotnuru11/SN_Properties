@@ -74,6 +74,36 @@ void main() {
     expect(find.text('The Willow Residence'), findsOneWidget);
   });
 
+  testWidgets('property card opens details from Home and Search',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.drag(
+      find.byType(CustomScrollView),
+      const Offset(0, -420),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('The Willow Residence'));
+    await tester.pumpAndSettle();
+    expect(find.text('Property details'), findsOneWidget);
+    expect(find.text('₹1.85 Cr'), findsOneWidget);
+    expect(find.text('Whitefield, Bengaluru'), findsOneWidget);
+    expect(find.text('Residential'), findsOneWidget);
+    expect(find.text('3 bedrooms'), findsOneWidget);
+    expect(find.text('A sunlit family home with a private balcony.'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+    expect(find.text('Featured properties'), findsOneWidget);
+
+    await tester.tap(find.text('Search'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Skyline Crest'));
+    await tester.pumpAndSettle();
+    expect(find.text('Property details'), findsOneWidget);
+    expect(find.text('Hitech City, Hyderabad'), findsOneWidget);
+  });
+
   testWidgets('registers locally and can log out', (WidgetTester tester) async {
     final storage = _MemoryProfileRepository();
     await tester.pumpWidget(

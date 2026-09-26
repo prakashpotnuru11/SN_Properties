@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:sn_properties/core/theme/app_theme.dart';
 import 'package:sn_properties/features/home/data/sample_properties.dart';
 import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/features/profile/data/profile_local_storage.dart';
@@ -10,6 +11,15 @@ import 'package:sn_properties/main.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 void main() {
+  test('uses the premium violet and neutral palette', () {
+    expect(AppTheme.primary, const Color(0xFF4B1D73));
+    expect(AppTheme.deepViolet, const Color(0xFF35104F));
+    expect(AppTheme.accent, const Color(0xFFD4AF37));
+    expect(AppTheme.canvas, const Color(0xFFF8F7FA));
+    expect(AppTheme.ink, const Color(0xFF17151C));
+    expect(AppTheme.mutedInk, const Color(0xFF625D68));
+  });
+
   test('every sample property has a unique image URL', () {
     final imageUrls = SampleProperties.all
         .map((property) => property.imageUrls)
@@ -63,6 +73,19 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Recently added'), findsOneWidget);
+  });
+
+  testWidgets('keeps Home selected for unimplemented destinations',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.text('Favorites'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 0);
+
+    await tester.tap(find.text('Enquiries'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 0);
   });
 
   testWidgets('searches local properties across searchable fields',

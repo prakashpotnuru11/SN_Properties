@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
             return;
           }
+          if (index == 2 || index == 3) return;
           setState(() => _selectedNavigationIndex = index);
         },
         destinations: const [

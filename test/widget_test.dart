@@ -23,6 +23,57 @@ void main() {
     expect(find.text('Recently added'), findsOneWidget);
   });
 
+  testWidgets('searches local properties across searchable fields',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    final searchField = find.byType(TextField).first;
+
+    await tester.enterText(searchField, 'hItEcH cItY');
+    await tester.pumpAndSettle();
+    expect(find.text('Skyline Crest'), findsOneWidget);
+    expect(find.text('The Willow Residence'), findsNothing);
+
+    await tester.enterText(searchField, 'rent');
+    await tester.pumpAndSettle();
+    expect(find.text('Skyline Crest'), findsOneWidget);
+    expect(find.text('The Atelier Offices'), findsOneWidget);
+
+    await tester.enterText(searchField, 'commercial');
+    await tester.pumpAndSettle();
+    expect(find.text('The Atelier Offices'), findsOneWidget);
+
+    await tester.enterText(searchField, 'sunlit');
+    await tester.pumpAndSettle();
+    expect(find.text('The Willow Residence'), findsOneWidget);
+
+    await tester.enterText(searchField, 'no matching property');
+    await tester.pumpAndSettle();
+    expect(find.text('No properties found'), findsOneWidget);
+  });
+
+  testWidgets('bottom Search opens searchable property results',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.text('Search'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Search properties'), findsOneWidget);
+    final searchField = find.byType(TextField).last;
+    await tester.enterText(searchField, 'hItEcH cItY');
+    await tester.pumpAndSettle();
+    expect(find.text('Skyline Crest'), findsOneWidget);
+    expect(find.text('The Willow Residence'), findsNothing);
+
+    await tester.enterText(searchField, 'no matching property');
+    await tester.pumpAndSettle();
+    expect(find.text('No properties found'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Clear search'));
+    await tester.pumpAndSettle();
+    expect(find.text('Available properties'), findsOneWidget);
+    expect(find.text('The Willow Residence'), findsOneWidget);
+  });
+
   testWidgets('registers locally and can log out', (WidgetTester tester) async {
     final storage = _MemoryProfileRepository();
     await tester.pumpWidget(

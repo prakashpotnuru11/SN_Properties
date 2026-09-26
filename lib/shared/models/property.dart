@@ -14,6 +14,7 @@ class Property {
     required this.bedrooms,
     required this.area,
     required this.accentColor,
+    this.description = '',
     this.isFeatured = false,
   });
 
@@ -25,5 +26,6 @@ class Property {
   final int bedrooms;
   final String area;
   final Color accentColor;
+  final String description;
   final bool isFeatured;
 }

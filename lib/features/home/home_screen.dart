@@ -4,6 +4,8 @@ import 'package:sn_properties/features/home/widgets/category_tile.dart';
 import 'package:sn_properties/features/home/widgets/property_card.dart';
 import 'package:sn_properties/features/home/widgets/section_header.dart';
 import 'package:sn_properties/features/profile/profile_screen.dart';
+import 'package:sn_properties/features/search/property_search.dart';
+import 'package:sn_properties/features/search/search_screen.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedNavigationIndex = 0;
   PropertyType _selectedPropertyType = PropertyType.buy;
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,39 +34,64 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.fromLTRB(20, 26, 20, 0),
               sliver: SliverToBoxAdapter(child: _buildSearch(context)),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              sliver: SliverToBoxAdapter(child: _buildPropertyTypes(context)),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-              sliver: SliverToBoxAdapter(child: _buildCategories(context)),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 30, 0, 0),
-              sliver: SliverToBoxAdapter(
-                child: SectionHeader(title: 'Featured properties'),
+            if (_searchQuery.trim().isNotEmpty) ...[
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 30, 0, 0),
+                sliver: SliverToBoxAdapter(
+                  child: SectionHeader(title: 'Search results'),
+                ),
               ),
-            ),
-            SliverToBoxAdapter(child: _buildPropertyList(SampleProperties.featured)),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 26, 0, 0),
-              sliver: SliverToBoxAdapter(
-                child: SectionHeader(title: 'Recently added'),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 28),
+                sliver: SliverToBoxAdapter(
+                  child: _buildSearchResults(_searchProperties(_searchQuery)),
+                ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: 28),
-              sliver: SliverToBoxAdapter(
-                child: _buildPropertyList(SampleProperties.recentlyAdded),
+            ] else ...[
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                sliver: SliverToBoxAdapter(child: _buildPropertyTypes(context)),
               ),
-            ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+                sliver: SliverToBoxAdapter(child: _buildCategories(context)),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 30, 0, 0),
+                sliver: SliverToBoxAdapter(
+                  child: SectionHeader(title: 'Featured properties'),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _buildPropertyList(SampleProperties.featured),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 26, 0, 0),
+                sliver: SliverToBoxAdapter(
+                  child: SectionHeader(title: 'Recently added'),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 28),
+                sliver: SliverToBoxAdapter(
+                  child: _buildPropertyList(SampleProperties.recentlyAdded),
+                ),
+              ),
+            ],
           ],
         ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedNavigationIndex,
         onDestinationSelected: (index) {
+          if (index == 1) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SearchScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 4) {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -146,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSearch(BuildContext context) {
     return TextField(
+      onChanged: (value) => setState(() => _searchQuery = value),
       decoration: InputDecoration(
         hintText: 'Search by city, neighbourhood or project',
         prefixIcon: Icon(
@@ -242,5 +271,25 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) => PropertyCard(property: properties[index]),
       ),
     );
+  }
+
+  List<Property> _searchProperties(String query) {
+    return PropertySearch.filter(SampleProperties.all, query);
+  }
+
+  Widget _buildSearchResults(List<Property> properties) {
+    if (properties.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 48),
+        child: Center(
+          child: Text(
+            'No properties found',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+      );
+    }
+
+    return _buildPropertyList(properties);
   }
 }

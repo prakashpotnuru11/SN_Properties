@@ -12,6 +12,7 @@ abstract final class SampleProperties {
       bedrooms: 3,
       area: '2,180 sq.ft',
       accentColor: Color(0xFF927A9F),
+      description: 'A sunlit family home with a private balcony.',
       isFeatured: true,
     ),
     Property(
@@ -23,6 +24,7 @@ abstract final class SampleProperties {
       bedrooms: 2,
       area: '1,460 sq.ft',
       accentColor: Color(0xFF7A9D9D),
+      description: 'A modern apartment close to Hyderabad business hubs.',
       isFeatured: true,
     ),
   ];
@@ -37,6 +39,7 @@ abstract final class SampleProperties {
       bedrooms: 0,
       area: '1,200 sq.ft',
       accentColor: Color(0xFFB18D62),
+      description: 'A quiet garden plot with convenient road access.',
     ),
     Property(
       title: 'The Atelier Offices',
@@ -47,6 +50,7 @@ abstract final class SampleProperties {
       bedrooms: 0,
       area: '2,750 sq.ft',
       accentColor: Color(0xFF7186A3),
+      description: 'Flexible office space in a well-connected business district.',
     ),
     Property(
       title: 'Green Acres Estate',
@@ -57,6 +61,9 @@ abstract final class SampleProperties {
       bedrooms: 0,
       area: '1.2 acres',
       accentColor: Color(0xFF7E9971),
+      description: 'Open agricultural land surrounded by green fields.',
     ),
   ];
+
+  static const all = <Property>[...featured, ...recentlyAdded];
 }

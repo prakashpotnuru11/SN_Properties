@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
 import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class PropertyDetailsScreen extends StatelessWidget {
-  const PropertyDetailsScreen({required this.property, super.key});
+  const PropertyDetailsScreen({
+    required this.property,
+    required this.favoritesStore,
+    super.key,
+  });
 
   final Property property;
+  final FavoritesStore favoritesStore;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +26,22 @@ class PropertyDetailsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Property details'),
+        actions: [
+          AnimatedBuilder(
+            animation: favoritesStore,
+            builder: (context, _) {
+              final isSaved = favoritesStore.isFavorite(property);
+              return IconButton(
+                onPressed: () => favoritesStore.toggle(property),
+                tooltip: isSaved ? 'Remove saved property' : 'Save property',
+                icon: Icon(
+                  isSaved ? Icons.favorite : Icons.favorite_border,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         top: false,

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
 import 'package:sn_properties/features/home/data/sample_properties.dart';
 import 'package:sn_properties/features/home/widgets/property_card.dart';
 import 'package:sn_properties/features/search/property_search.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({required this.favoritesStore, super.key});
+
+  final FavoritesStore favoritesStore;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -120,7 +123,10 @@ class _SearchScreenState extends State<SearchScreen> {
       scrollDirection: Axis.horizontal,
       itemCount: properties.length,
       separatorBuilder: (_, _) => const SizedBox(width: 14),
-      itemBuilder: (context, index) => PropertyCard(property: properties[index]),
+      itemBuilder: (context, index) => PropertyCard(
+        property: properties[index],
+        favoritesStore: widget.favoritesStore,
+      ),
     );
   }
 }

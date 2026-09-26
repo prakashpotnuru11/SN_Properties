@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sn_properties/core/theme/app_theme.dart';
 import 'package:sn_properties/features/home/data/sample_properties.dart';
@@ -11,6 +12,10 @@ import 'package:sn_properties/main.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   test('uses the premium violet and neutral palette', () {
     expect(AppTheme.primary, const Color(0xFF4B1D73));
     expect(AppTheme.deepViolet, const Color(0xFF35104F));
@@ -34,6 +39,7 @@ void main() {
   testWidgets('failed property image displays the placeholder',
       (WidgetTester tester) async {
     const property = Property(
+      id: 'image-fallback-test',
       title: 'Image fallback test',
       location: 'Test locality',
       price: '₹1 Cr',
@@ -75,17 +81,18 @@ void main() {
     expect(find.text('Recently added'), findsOneWidget);
   });
 
-  testWidgets('keeps Home selected for unimplemented destinations',
+  testWidgets('opens Favorites and keeps its navigation destination selected',
       (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
     await tester.tap(find.text('Favorites'));
     await tester.pumpAndSettle();
-    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 0);
+    expect(find.text('Saved properties'), findsOneWidget);
+    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 2);
 
     await tester.tap(find.text('Enquiries'));
     await tester.pumpAndSettle();
-    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 0);
+    expect(tester.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex, 2);
   });
 
   testWidgets('searches local properties across searchable fields',

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
+import 'package:sn_properties/features/favorites/favorites_screen.dart';
 import 'package:sn_properties/features/home/data/sample_properties.dart';
 import 'package:sn_properties/features/home/widgets/category_tile.dart';
 import 'package:sn_properties/features/home/widgets/property_card.dart';
@@ -9,7 +11,9 @@ import 'package:sn_properties/features/search/search_screen.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({required this.favoritesStore, super.key});
+
+  final FavoritesStore favoritesStore;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -87,7 +91,19 @@ class _HomeScreenState extends State<HomeScreen> {
           if (index == 1) {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const SearchScreen(),
+                builder: (_) => SearchScreen(
+                  favoritesStore: widget.favoritesStore,
+                ),
+              ),
+            );
+            return;
+          }
+          if (index == 2) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => FavoritesScreen(
+                  favoritesStore: widget.favoritesStore,
+                ),
               ),
             );
             return;
@@ -100,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
             return;
           }
-          if (index == 2 || index == 3) return;
+          if (index == 3) return;
           setState(() => _selectedNavigationIndex = index);
         },
         destinations: const [
@@ -269,7 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: properties.length,
         separatorBuilder: (_, _) => const SizedBox(width: 14),
-        itemBuilder: (context, index) => PropertyCard(property: properties[index]),
+        itemBuilder: (context, index) => PropertyCard(
+          property: properties[index],
+          favoritesStore: widget.favoritesStore,
+        ),
       ),
     );
   }

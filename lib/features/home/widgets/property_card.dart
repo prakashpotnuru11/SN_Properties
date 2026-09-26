@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
 import 'package:sn_properties/features/properties/property_details_screen.dart';
 import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class PropertyCard extends StatelessWidget {
-  const PropertyCard({required this.property, super.key});
+  const PropertyCard({
+    required this.property,
+    required this.favoritesStore,
+    super.key,
+  });
 
   final Property property;
+  final FavoritesStore favoritesStore;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,10 @@ class PropertyCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => PropertyDetailsScreen(property: property),
+                builder: (_) => PropertyDetailsScreen(
+                  property: property,
+                  favoritesStore: favoritesStore,
+                ),
               ),
             );
           },
@@ -60,14 +69,25 @@ class PropertyCard extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: IconButton(
-                    onPressed: () {},
-                    tooltip: 'Save property',
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.white.withValues(alpha: 0.9),
-                      foregroundColor: Theme.of(context).colorScheme.primary,
-                    ),
-                    icon: const Icon(Icons.favorite_border, size: 20),
+                  child: AnimatedBuilder(
+                    animation: favoritesStore,
+                    builder: (context, _) {
+                      final isSaved = favoritesStore.isFavorite(property);
+                      return IconButton(
+                        onPressed: () => favoritesStore.toggle(property),
+                        tooltip: isSaved
+                            ? 'Remove saved property'
+                            : 'Save property',
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white.withValues(alpha: 0.9),
+                          foregroundColor: Theme.of(context).colorScheme.primary,
+                        ),
+                        icon: Icon(
+                          isSaved ? Icons.favorite : Icons.favorite_border,
+                          size: 20,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

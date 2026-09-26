@@ -6,6 +6,7 @@ enum PropertyCategory { residential, commercial, agricultural, plots }
 
 class Property {
   const Property({
+    required this.id,
     required this.title,
     required this.location,
     required this.price,
@@ -19,6 +20,7 @@ class Property {
     this.isFeatured = false,
   });
 
+  final String id;
   final String title;
   final String location;
   final String price;

@@ -4,6 +4,7 @@ import 'package:sn_properties/shared/models/property.dart';
 abstract final class SampleProperties {
   static const featured = <Property>[
     Property(
+      id: 'the-willow-residence',
       title: 'The Willow Residence',
       location: 'Whitefield, Bengaluru',
       price: '₹1.85 Cr',
@@ -19,6 +20,7 @@ abstract final class SampleProperties {
       isFeatured: true,
     ),
     Property(
+      id: 'skyline-crest',
       title: 'Skyline Crest',
       location: 'Hitech City, Hyderabad',
       price: '₹78,000/mo',
@@ -37,6 +39,7 @@ abstract final class SampleProperties {
 
   static const recentlyAdded = <Property>[
     Property(
+      id: 'palm-grove-enclave',
       title: 'Palm Grove Enclave',
       location: 'Sarjapur Road, Bengaluru',
       price: '₹92 Lakh',
@@ -51,6 +54,7 @@ abstract final class SampleProperties {
       ],
     ),
     Property(
+      id: 'the-atelier-offices',
       title: 'The Atelier Offices',
       location: 'Andheri East, Mumbai',
       price: '₹2.4 Lakh/mo',
@@ -65,6 +69,7 @@ abstract final class SampleProperties {
       ],
     ),
     Property(
+      id: 'green-acres-estate',
       title: 'Green Acres Estate',
       location: 'Devanahalli, Bengaluru',
       price: '₹1.2 Cr',

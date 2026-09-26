@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:sn_properties/core/theme/app_theme.dart';
+import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
 import 'package:sn_properties/features/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key, this.favoritesStore});
 
-  // This widget is the root of your application.
+  final FavoritesStore? favoritesStore;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final FavoritesStore _favoritesStore =
+      widget.favoritesStore ?? FavoritesStore(FavoritesLocalStorage());
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesStore.initialize();
+  }
+
+  @override
+  void dispose() {
+    if (widget.favoritesStore == null) {
+      _favoritesStore.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SN PROPERTIES',
       theme: AppTheme.light,
-      home: const HomeScreen(),
+      home: HomeScreen(favoritesStore: _favoritesStore),
     );
   }
 }

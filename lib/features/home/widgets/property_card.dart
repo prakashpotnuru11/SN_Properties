@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sn_properties/features/properties/property_details_screen.dart';
+import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class PropertyCard extends StatelessWidget {
@@ -31,26 +32,7 @@ class PropertyCard extends StatelessWidget {
             children: [
             Stack(
               children: [
-                Container(
-                  height: 156,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        property.accentColor.withValues(alpha: 0.65),
-                        property.accentColor,
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.home_work_outlined,
-                      size: 58,
-                      color: Colors.white.withValues(alpha: 0.78),
-                    ),
-                  ),
-                ),
+                PropertyImage(property: property, height: 156),
                 Positioned(
                   top: 12,
                   left: 12,

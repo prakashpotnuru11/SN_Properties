@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
 class PropertyDetailsScreen extends StatelessWidget {
@@ -29,27 +30,7 @@ class PropertyDetailsScreen extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  height: 240,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        property.accentColor.withValues(alpha: 0.65),
-                        property.accentColor,
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.home_work_outlined,
-                      size: 76,
-                      color: Colors.white.withValues(alpha: 0.82),
-                    ),
-                  ),
-                ),
+                child: PropertyImage(property: property, height: 240),
               ),
               const SizedBox(height: 22),
               Text(

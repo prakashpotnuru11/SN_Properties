@@ -15,6 +15,7 @@ class Property {
     required this.area,
     required this.accentColor,
     this.description = '',
+    this.imageUrls = const [],
     this.isFeatured = false,
   });
 
@@ -27,5 +28,6 @@ class Property {
   final String area;
   final Color accentColor;
   final String description;
+  final List<String> imageUrls;
   final bool isFeatured;
 }

@@ -1,12 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:sn_properties/features/home/data/sample_properties.dart';
+import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/features/profile/data/profile_local_storage.dart';
 import 'package:sn_properties/features/profile/login_screen.dart';
 import 'package:sn_properties/features/profile/profile_screen.dart';
 import 'package:sn_properties/main.dart';
+import 'package:sn_properties/shared/models/property.dart';
 
 void main() {
+  test('every sample property has a unique image URL', () {
+    final imageUrls = SampleProperties.all
+        .map((property) => property.imageUrls)
+        .expand((urls) => urls)
+        .toList();
+
+    expect(imageUrls, hasLength(SampleProperties.all.length));
+    expect(imageUrls.every((url) => url.isNotEmpty), isTrue);
+    expect(imageUrls.toSet(), hasLength(SampleProperties.all.length));
+  });
+
+  testWidgets('failed property image displays the placeholder',
+      (WidgetTester tester) async {
+    const property = Property(
+      title: 'Image fallback test',
+      location: 'Test locality',
+      price: '₹1 Cr',
+      type: PropertyType.buy,
+      category: PropertyCategory.residential,
+      bedrooms: 1,
+      area: '1,000 sq.ft',
+      accentColor: Color(0xFF927A9F),
+      imageUrls: ['https://invalid.example/property.jpg'],
+    );
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SizedBox(
+          width: 300,
+          child: PropertyImage(property: property, height: 160),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.home_work_outlined), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders the SN PROPERTIES home screen', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
@@ -91,6 +133,10 @@ void main() {
     expect(find.text('Residential'), findsOneWidget);
     expect(find.text('3 bedrooms'), findsOneWidget);
     expect(find.text('A sunlit family home with a private balcony.'), findsOneWidget);
+    expect(
+      tester.widget<PropertyImage>(find.byType(PropertyImage)).property.imageUrls.first,
+      SampleProperties.featured.first.imageUrls.first,
+    );
 
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
@@ -102,6 +148,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Property details'), findsOneWidget);
     expect(find.text('Hitech City, Hyderabad'), findsOneWidget);
+    expect(
+      tester.widget<PropertyImage>(find.byType(PropertyImage)).property.imageUrls.first,
+      SampleProperties.featured[1].imageUrls.first,
+    );
   });
 
   testWidgets('registers locally and can log out', (WidgetTester tester) async {

@@ -8,6 +8,7 @@ import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/features/profile/data/profile_local_storage.dart';
 import 'package:sn_properties/features/profile/login_screen.dart';
 import 'package:sn_properties/features/profile/profile_screen.dart';
+import 'package:sn_properties/features/properties/property_details_screen.dart';
 import 'package:sn_properties/main.dart';
 import 'package:sn_properties/shared/models/property.dart';
 
@@ -34,6 +35,28 @@ void main() {
     expect(imageUrls, hasLength(SampleProperties.all.length));
     expect(imageUrls.every((url) => url.isNotEmpty), isTrue);
     expect(imageUrls.toSet(), hasLength(SampleProperties.all.length));
+  });
+
+  test('builds share text from available property fields', () {
+    const property = Property(
+      id: 'share-test',
+      title: 'Share test property',
+      location: 'Test locality',
+      price: '₹1 Cr',
+      type: PropertyType.buy,
+      category: PropertyCategory.plots,
+      bedrooms: 0,
+      area: '1,200 sq.ft',
+      accentColor: Color(0xFF927A9F),
+      description: 'A plot ready for a new home.',
+    );
+
+    expect(
+      propertyShareText(property),
+      'Share test property\n₹1 Cr\nTest locality\nBUY\nplots\n1,200 sq.ft\n'
+      'A plot ready for a new home.',
+    );
+    expect(propertyShareText(property), isNot(contains('bedrooms')));
   });
 
   testWidgets('failed property image displays the placeholder',
@@ -182,6 +205,7 @@ void main() {
       tester.widget<PropertyImage>(find.byType(PropertyImage)).property.imageUrls.first,
       SampleProperties.featured[1].imageUrls.first,
     );
+    expect(find.byTooltip('Share property'), findsOneWidget);
   });
 
   testWidgets('registers locally and can log out', (WidgetTester tester) async {

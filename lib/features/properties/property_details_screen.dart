@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sn_properties/features/favorites/favorites_local_storage.dart';
 import 'package:sn_properties/features/properties/widgets/property_image.dart';
 import 'package:sn_properties/shared/models/property.dart';
@@ -27,6 +28,13 @@ class PropertyDetailsScreen extends StatelessWidget {
         ),
         title: const Text('Property details'),
         actions: [
+          IconButton(
+            onPressed: () => SharePlus.instance.share(
+              ShareParams(text: propertyShareText(property)),
+            ),
+            tooltip: 'Share property',
+            icon: const Icon(Icons.share_outlined),
+          ),
           AnimatedBuilder(
             animation: favoritesStore,
             builder: (context, _) {
@@ -123,6 +131,21 @@ class PropertyDetailsScreen extends StatelessWidget {
       PropertyCategory.plots => 'Plots',
     };
   }
+}
+
+String propertyShareText(Property property) {
+  final title = property.title.trim();
+  final details = <String>[
+    if (property.price.trim().isNotEmpty) property.price.trim(),
+    if (property.location.trim().isNotEmpty) property.location.trim(),
+    property.type.name.toUpperCase(),
+    property.category.name,
+    if (property.area.trim().isNotEmpty) property.area.trim(),
+    if (property.bedrooms > 0) '${property.bedrooms} bedrooms',
+    if (property.description.trim().isNotEmpty) property.description.trim(),
+  ];
+
+  return [if (title.isNotEmpty) title, ...details].join('\n');
 }
 
 class _AttributeChip extends StatelessWidget {

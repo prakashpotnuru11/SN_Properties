@@ -1,6 +1,7 @@
 
 import express from "express";
 import cors from "cors";
+import { testDatabaseConnection } from "./db.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,18 @@ app.get("/api/health", (_req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`SN PROPERTIES API running on port ${PORT}`);
-});
+// Start server after checking database connection
+async function startServer() {
+  try {
+    await testDatabaseConnection();
+
+    app.listen(PORT, () => {
+      console.log(`SN PROPERTIES API running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
